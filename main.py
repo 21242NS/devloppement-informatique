@@ -4,3 +4,4 @@ date : 6 fevrier 2024
 entrée : 
 sortie : 
 """
+print("nico is the best")
