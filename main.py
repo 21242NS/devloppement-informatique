@@ -4,4 +4,8 @@ date : 6 fevrier 2024
 entrée : 
 sortie : 
 """
+
+import NumPy as np
+
 print("nico is the best in the world")
+print(np.cos(0))
