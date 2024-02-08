@@ -5,7 +5,7 @@ entrée :
 sortie : 
 """
 
-import NumPy as np
+import numpy as np
 
 print("nico is the best in the world")
 print(np.cos(0))
