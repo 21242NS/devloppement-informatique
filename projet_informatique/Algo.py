@@ -15,16 +15,33 @@ BLOCKER = 4
 IMP = 5
 
 # Fonction pour évaluer la position actuelle du plateau
-def evaluate_board(board):
-    # Ici, vous pouvez définir votre propre fonction d'évaluation pour évaluer la position du plateau
-    # Par exemple, vous pouvez attribuer des valeurs aux différentes configurations de pions, blocages, etc.
-    return 0
+def evaluate_board(board, pawn):
+    position = [0,0]
+    condition = False
+    while condition == False :
+        for i in range(len(board)):
+            for j in range(len(board[i])) :
+                if board[i][j] == pawn :
+                    position = [i,j]
+                    condition = True
+    return position
+def peut_passer(board, pos_depart, pos_final):
+    case_a_checker_x = 0
+    case_a_checker_y = 0
+    for i in range(2) :
+        if i == 0 :
+            case_a_checker_x = (pos_depart[i] - pos_final[i])/2+pos_depart[i]
+        else :
+            case_a_checker_y = (pos_depart[i] - pos_final[i])/2+pos_depart[i]
+    if board[case_a_checker_x][case_a_checker_y]==3.0 :
+        return True 
+    else : 
+        return False
 
 # Fonction pour générer tous les coups possibles à partir d'une position donnée
-def generate_moves(board):
+def generate_moves(board, pos, pawn):
     moves = []
-    # Ici, vous devez implémenter la génération de tous les coups possibles à partir de la position actuelle du plateau
-    # Cela inclut les mouvements des pions et les placements des bloqueurs
+    for 
     return moves
 
 # Fonction pour effectuer un coup sur le plateau
