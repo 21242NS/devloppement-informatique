@@ -4,7 +4,7 @@ import json
 def send_request_to_server(server_ip, server_port, request_data):
     try:
         # Créer un socket TCP
-        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket = socket.socket()
 
         # Établir une connexion avec le serveur
         client_socket.connect((server_ip, server_port))
@@ -31,14 +31,48 @@ def send_request_to_server(server_ip, server_port, request_data):
         print("Une erreur s'est produite lors de l'envoi de la requête:", e)
         return None
 
+def respond_to_ping(local_ip, server_port):
+    try:
+        # Créer un socket TCP
+        server_socket = socket.socket()
+        
+        # Établir une connexion avec le client
+        server_socket.bind((local_ip, server_port)) 
+        server_socket.listen() 
+        
+        while True:
+            client, adrr = server_socket.accept()
+            # Attendre la demande du client
+            data = client.recv(1024).decode()
+            request_ping = json.loads(data)
+            # Vérifier si la demande est un "ping"
+            
+            if request_ping.get("request") == "ping":
+
+                # Répondre avec "pong"
+                response_data = {"response": "pong"}
+                response_ping = json.dumps(response_data)
+                client.sendall(response_ping.encode())
+                return True
+            else:
+                return False
+
+    except Exception as e:
+        print("Une erreur s'est produite lors de la réponse au ping:", e)
+        #raise e
+        return False
+    finally:
+        server_socket.close()
+
 # Exemple d'utilisation de la fonction send_request_to_server
-server_ip = 'localhost'  # Adresse IP du serveur
+local_ip = '0.0.0.0'
+server_ip = '172.17.10.59'  # Adresse IP du serveur
 server_port = 3000  # Port du serveur
 
 request_data = {
     "request": "subscribe",
     "port": 3000,
-    "name": "Lolo white",
+    "name": "PDF_gang",
     "matricules": ["12346", "67891"]
 }
 
@@ -48,3 +82,10 @@ if response is not None:
     print("Réponse du serveur:", response)
 else:
     print("Aucune réponse reçue du serveur.")
+
+# Réponse au ping
+ping_response = respond_to_ping(local_ip, server_port)
+if ping_response:
+    print("Le client a répondu au ping avec succès.")
+else:
+    print("Une erreur s'est produite lors de la réponse au ping.")
