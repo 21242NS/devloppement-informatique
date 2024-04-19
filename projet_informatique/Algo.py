@@ -5,6 +5,7 @@ entrée :
 sortie : 
 """
 import copy
+import random
 
 # Définition des constantes pour les valeurs du plateau
 PAWN1 = 0.0
@@ -101,6 +102,19 @@ def generate_moves(board, pawn):
     
     return all_moves
 
+
+def chose_random(liste):
+    sous_liste_1 = liste[0]
+    sous_liste_2 = liste[1]
+
+    # Choix aléatoire de l'une des sous-listes
+    sous_liste_choisie = random.choice([sous_liste_1, sous_liste_2])
+
+    # Choix aléatoire d'un élément dans la sous-liste choisie
+    element_choisi = random.choice(sous_liste_choisie)
+
+    return element_choisi
+
 # Fonction pour effectuer un coup sur le plateau
 def make_move(board, move):
     # Ici, vous devez implémenter la mise à jour du plateau après avoir effectué un coup
@@ -127,16 +141,23 @@ def minimax(board, depth, maximizing_player):
         return min_eval
 
 # Fonction pour choisir le meilleur coup à jouer pour l'IA
-def choose_move(board):
-    best_move = None
-    best_eval = float('-inf')
-    for move in generate_moves(board):
-        new_board = make_move(board, move)
-        eval = minimax(new_board, depth=3, maximizing_player=False)  # Profondeur de recherche limitée
-        if eval > best_eval:
-            best_eval = eval
-            best_move = move
-    return best_move
+def choose_move(board, pawn):
+    #best_move = None
+    #best_eval = float('-inf')
+    #for move in generate_moves(board):
+        #new_board = make_move(board, move)
+        #eval = minimax(new_board, depth=3, maximizing_player=False)  # Profondeur de recherche limitée
+        #if eval > best_eval:
+            #best_eval = eval
+            #best_move = move
+    random_moove = chose_random(generate_moves(board, pawn))
+    if len(random_moove)==2 :
+        if Blockers > 0:
+            moove = {"Blocker":random_moove}
+            Blockers -=1
+    else :
+        moove = {"Pawn":random_moove}
+    return moove
 
 # Exemple d'utilisation
 #board = init_board()
@@ -161,3 +182,7 @@ board =     [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3
              [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 print(generate_moves(board,PAWN2))
+s = generate_moves(board,PAWN2)
+print(len(s[0]))
+print(len(s[1]))
+
