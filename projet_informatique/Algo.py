@@ -6,6 +6,9 @@ sortie :
 """
 import copy
 import random
+import json
+import communication
+
 
 # Définition des constantes pour les valeurs du plateau
 PAWN1 = 0.0
@@ -14,7 +17,7 @@ EMPTY_PAWN = 2.0
 EMPTY_BLOCKER = 3.0
 BLOCKER = 4.0
 IMP = 5.0
-Blockers = 10.0
+
 
 # Fonction pour évaluer la position actuelle du plateau
 def evaluate_board(board, pawn):
@@ -63,7 +66,7 @@ def peut_mettre_blockeurs(board, pos_blocker1, pos_blocker2):
         return False
 # Fonction pour générer tous les coups possibles à partir d'une position donnée
 def generate_moves(board, pawn):
-    global Blockers
+    global My_Blockers
     b_move= []
     b_move_a=[]
     #part for the pawn:
@@ -78,7 +81,7 @@ def generate_moves(board, pawn):
         if peut_passer(board,pos,p_moves_b[i]):
             p_moves_a.append([p_moves_b[i]])
     #part for the blockers :
-    if Blockers > 0:
+    if My_Blockers > 0:
         for i in range(1,len(board),2):
             for j in range(0,len(board[i]), 2) :
                 x = j+2
@@ -150,46 +153,38 @@ def choose_move(board, pawn):
             #best_move = move
     random_moove = chose_random(generate_moves(board, pawn))
     if len(random_moove)==2 :
-        global Blockers
+        global My_Blockers
         moove = {"type":"blocker",
                  "position":random_moove}
     else :
         moove = {"type":"Pawn",
                  "position":random_moove}
     return moove
+#Principal code :
+with open("projet_informatique/Status.json") as f:
+    status = json.load(f)
+board = status["board"]
+if status["players"][0]=="PDF_gang" :
+    My_Blockers = status["blockers"][0]
+    Ennemy_Blockers = status["blockers"][1]
+    My_pawn = PAWN1
+    ennemy_pawn = PAWN2
+elif status["players"][1]=="PDF_gang":
+    My_Blockers = status["blockers"][1]
+    Ennemy_Blockers = status["blockers"][0]
+    My_pawn = PAWN2
+    ennemy_pawn = PAWN1
 
-# Exemple d'utilisation
-#board = init_board()
-#print_board(board)
-#ai_move = choose_move(board)
-#print("AI's move:", ai_move)
-board =     [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
-print(generate_moves(board,PAWN2))
-d = generate_moves(board,PAWN2)
-print(len(d[0]))
-print(len(d[1]))
-s=choose_move(board, PAWN2)
-print(s)
+#print(generate_moves(board,PAWN2))
+#d = generate_moves(board,PAWN2)
+#print(len(d[0]))
+#print(len(d[1]))
+#s=choose_move(board, PAWN2)
+#print(s)
 #key = s.keys()
 #if list(key)[0]=="Blocker":
-Blockers = Blockers-1
-print(Blockers)
+#Blockers = Blockers-1
+#print(Blockers)
 
 
 
