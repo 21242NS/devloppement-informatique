@@ -5,6 +5,7 @@ entrée :
 sortie : 
 """
 import copy
+import random
 
 # Définition des constantes pour les valeurs du plateau
 PAWN1 = 0.0
@@ -13,16 +14,8 @@ EMPTY_PAWN = 2.0
 EMPTY_BLOCKER = 3.0
 BLOCKER = 4.0
 IMP = 5.0
-Blockers = 10
-class Blocker():
-    def __init__(self, position):
-        self.position = position
-    def space1(self):
-        pos1=self.position[0]
-        return pos1
-    def space2(self):
-        pos2 =self.position[1]
-        return pos2
+Blockers = 10.0
+
 # Fonction pour évaluer la position actuelle du plateau
 def evaluate_board(board, pawn):
     position = [0,0]
@@ -70,6 +63,7 @@ def peut_mettre_blockeurs(board, pos_blocker1, pos_blocker2):
         return False
 # Fonction pour générer tous les coups possibles à partir d'une position donnée
 def generate_moves(board, pawn):
+    global Blockers
     b_move= []
     b_move_a=[]
     #part for the pawn:
@@ -82,24 +76,42 @@ def generate_moves(board, pawn):
     p_moves_a = []
     for i in range(len(p_moves_b)) :
         if peut_passer(board,pos,p_moves_b[i]):
-            p_moves_a.append(p_moves_b[i])
+            p_moves_a.append([p_moves_b[i]])
     #part for the blockers :
-    for i in range(1,len(board),2):
+    if Blockers > 0:
+        for i in range(1,len(board),2):
             for j in range(0,len(board[i]), 2) :
                 x = j+2
                 if x<len(board):
                     b_move.append([[j,i],[x,i]])
-    for i in range(1,len(board),2):
+        for i in range(1,len(board),2):
             for j in range(0,len(board[i]), 2) :
                 x = j+2
                 if x<len(board):
                     b_move.append([[i,j],[i,x]])
-    for i in range(len(b_move)):
-        if peut_mettre_blockeurs(board,b_move[i][0],b_move[i][1]):
-            b_move_a.append(b_move[i])
-    all_moves=[p_moves_a,b_move_a]
-    
+        for i in range(len(b_move)):
+            if peut_mettre_blockeurs(board,b_move[i][0],b_move[i][1]):
+                b_move_a.append(b_move[i])
+        all_moves=[p_moves_a,b_move_a]
+    else : 
+        all_moves = p_moves_a
     return all_moves
+
+
+def chose_random(liste):
+    if len(liste) == 2:
+        sous_liste_1 = liste[0]
+        sous_liste_2 = liste[1]
+
+        # Choix aléatoire de l'une des sous-listes
+        sous_liste_choisie = random.choice([sous_liste_1, sous_liste_2])
+
+        # Choix aléatoire d'un élément dans la sous-liste choisie
+        element_choisi = random.choice(sous_liste_choisie)
+    else:
+        element_choisi = random.choice(liste)
+
+    return element_choisi
 
 # Fonction pour effectuer un coup sur le plateau
 def make_move(board, move):
@@ -127,16 +139,24 @@ def minimax(board, depth, maximizing_player):
         return min_eval
 
 # Fonction pour choisir le meilleur coup à jouer pour l'IA
-def choose_move(board):
-    best_move = None
-    best_eval = float('-inf')
-    for move in generate_moves(board):
-        new_board = make_move(board, move)
-        eval = minimax(new_board, depth=3, maximizing_player=False)  # Profondeur de recherche limitée
-        if eval > best_eval:
-            best_eval = eval
-            best_move = move
-    return best_move
+def choose_move(board, pawn):
+    #best_move = None
+    #best_eval = float('-inf')
+    #for move in generate_moves(board):
+        #new_board = make_move(board, move)
+        #eval = minimax(new_board, depth=3, maximizing_player=False)  # Profondeur de recherche limitée
+        #if eval > best_eval:
+            #best_eval = eval
+            #best_move = move
+    random_moove = chose_random(generate_moves(board, pawn))
+    if len(random_moove)==2 :
+        global Blockers
+        moove = {"type":"blocker",
+                 "position":random_moove}
+    else :
+        moove = {"type":"Pawn",
+                 "position":random_moove}
+    return moove
 
 # Exemple d'utilisation
 #board = init_board()
@@ -161,3 +181,15 @@ board =     [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3
              [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
              [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 print(generate_moves(board,PAWN2))
+d = generate_moves(board,PAWN2)
+print(len(d[0]))
+print(len(d[1]))
+s=choose_move(board, PAWN2)
+print(s)
+#key = s.keys()
+#if list(key)[0]=="Blocker":
+Blockers = Blockers-1
+print(Blockers)
+
+
+
