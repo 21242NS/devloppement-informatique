@@ -7,8 +7,6 @@ sortie :
 import copy
 import random
 import json
-import communication
-from communication import state
 
 
 
