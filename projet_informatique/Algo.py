@@ -158,18 +158,6 @@ def choose_move(board, pawn):
     return moove
 #Principal code :
 
-board = state["board"]
-if state["players"][0]=="PDF_gang" :
-    My_Blockers = state["blockers"][0]
-    Ennemy_Blockers = state["blockers"][1]
-    My_pawn = PAWN1
-    ennemy_pawn = PAWN2
-elif state["players"][1]=="PDF_gang":
-    My_Blockers = state["blockers"][1]
-    Ennemy_Blockers = state["blockers"][0]
-    My_pawn = PAWN2
-    ennemy_pawn = PAWN1
-
 #print(generate_moves(board,PAWN2))
 #d = generate_moves(board,PAWN2)
 #print(len(d[0]))
