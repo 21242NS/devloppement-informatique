@@ -8,6 +8,8 @@ import copy
 import random
 import json
 import communication
+from communication import state
+
 
 
 # Définition des constantes pour les valeurs du plateau
@@ -117,9 +119,6 @@ def chose_random(liste):
     return element_choisi
 
 # Fonction pour effectuer un coup sur le plateau
-def make_move(board, move):
-    # Ici, vous devez implémenter la mise à jour du plateau après avoir effectué un coup
-    return new_board
 
 # Algorithme minimax avec élagage alpha-bêta
 def minimax(board, depth, maximizing_player):
@@ -153,7 +152,6 @@ def choose_move(board, pawn):
             #best_move = move
     random_moove = chose_random(generate_moves(board, pawn))
     if len(random_moove)==2 :
-        global My_Blockers
         moove = {"type":"blocker",
                  "position":random_moove}
     else :
@@ -161,17 +159,16 @@ def choose_move(board, pawn):
                  "position":random_moove}
     return moove
 #Principal code :
-with open("projet_informatique/Status.json") as f:
-    status = json.load(f)
-board = status["board"]
-if status["players"][0]=="PDF_gang" :
-    My_Blockers = status["blockers"][0]
-    Ennemy_Blockers = status["blockers"][1]
+
+board = state["board"]
+if state["players"][0]=="PDF_gang" :
+    My_Blockers = state["blockers"][0]
+    Ennemy_Blockers = state["blockers"][1]
     My_pawn = PAWN1
     ennemy_pawn = PAWN2
-elif status["players"][1]=="PDF_gang":
-    My_Blockers = status["blockers"][1]
-    Ennemy_Blockers = status["blockers"][0]
+elif state["players"][1]=="PDF_gang":
+    My_Blockers = state["blockers"][1]
+    Ennemy_Blockers = state["blockers"][0]
     My_pawn = PAWN2
     ennemy_pawn = PAWN1
 
