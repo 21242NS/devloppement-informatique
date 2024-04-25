@@ -80,9 +80,25 @@ class Server:
             return False
         finally:
             self.__server_socket.close()
+    def move_comm(self):
+        try:
+            self.__server_socket.listen()
+
+            while True:
+                client, adrr = self.__server_socket.accept()
+                data = client.recv(1024).decode()
+                state = json.loads(data)
+                status = state["state"]
+                return status
+        except Exception as e:
+            print("Une erreur s'est produite:", e)
+            return False
+        
 server = Server()
 # Exemple d'utilisation de la fonction send_request_to_server
 response = client.send_request_to_server()
+
+state = server.move_comm()
 
 if response is not None:
     print("Réponse du serveur:", response)
