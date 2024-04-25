@@ -19,6 +19,7 @@ request_data = {
     "name": "PDF_gang",
     "matricules": ["12346", "67891"]
 }
+finished = False
 
 class Client:
     def __init__(self, request_data):
@@ -59,6 +60,8 @@ class Server:
         self.__server_socket = socket.socket()
         # Établir une connexion avec le client
         self.__server_socket.bind((local_ip, server_port))
+        # Mettre move dans la class
+        self.__move = move
 
     def respond_to_ping(self):
         try:
@@ -89,16 +92,27 @@ class Server:
         try:
             self.__server_socket.listen()
 
-            while True:
+            while not finished:
                 client, adrr = self.__server_socket.accept()
-                data = client.recv(1024).decode()
+                # Reçois l'état du jeu
+                data = client.recv(2048).decode('utF8')
                 state = json.loads(data)
                 status = state["state"]
-                return status
+                print(status)
+                # Envoie notre coup
+                self.send_move()
         except Exception as e:
             print("Une erreur s'est produite:", e)
             return False
-        
+    # Le coup à faire
+    def send_move(self):
+        move_send = json.dumps(self.__move).encode('utF8')
+        print(move_send)
+        sent = 0
+        while sent < len(move_send):
+            sent += self.__server_socket.send(move_send)
+        self.__server_socket.sendall(move_send)
+
 server = Server()
 # Exemple d'utilisation de la fonction send_request_to_server
 
