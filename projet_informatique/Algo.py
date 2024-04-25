@@ -7,18 +7,11 @@ sortie :
 import copy
 import random
 import json
-import communication
-from communication import state
+
 
 
 
 # Définition des constantes pour les valeurs du plateau
-PAWN1 = 0.0
-PAWN2 = 1.0
-EMPTY_PAWN = 2.0
-EMPTY_BLOCKER = 3.0
-BLOCKER = 4.0
-IMP = 5.0
 
 
 # Fonction pour évaluer la position actuelle du plateau
@@ -67,8 +60,8 @@ def peut_mettre_blockeurs(board, pos_blocker1, pos_blocker2):
     else :
         return False
 # Fonction pour générer tous les coups possibles à partir d'une position donnée
-def generate_moves(board, pawn):
-    global My_Blockers
+def generate_moves(board, pawn, My_Blockers):
+    
     b_move= []
     b_move_a=[]
     #part for the pawn:
@@ -77,7 +70,7 @@ def generate_moves(board, pawn):
     pos_down=[pos[0]+2,pos[1]]
     pos_left = [pos[0],pos[1]-2]
     pos_right=[pos[0],pos[1]+2]
-    p_moves_b = [pos_up,pos_down,pos_left,pos_right]
+    p_moves_b = [pos_up,pos_left,pos_right,pos_down]
     p_moves_a = []
     for i in range(len(p_moves_b)) :
         if peut_passer(board,pos,p_moves_b[i]):
@@ -101,7 +94,37 @@ def generate_moves(board, pawn):
     else : 
         all_moves = p_moves_a
     return all_moves
+def distance(board, pawn):
+    pos = evaluate_board(board, pawn)
+    if pawn == 1.0:
+        res = pos[0]
+    elif pawn == 0.0:
+        res = len(board)-1-pos[0]
+    return res
+def evaluate_move(board, pawn):
+    value = 0
+    distance_objectif = distance(board, pawn)
+    if distance_objectif == 0:
+        value += distance_objectif
+    return value
 
+def chose_best_moves(board, pawn, blocker):
+    best_move = []
+    best_value = float('-inf')
+    moves = generate_moves(board,pawn, blocker)
+    Value = evaluate_move(board, pawn)
+    if Value<evaluate_move(board, )
+    for j in range(len(moves[0])):
+        new_board = make_move(board, moves[0][j], pawn)
+        if Value-evaluate_move(new_board,pawn)>=0 :
+            Value = evaluate_board(new_board, pawn)
+            if Value > best_value:
+                best_move = [moves[0][j]]
+                best_value = Value
+            elif Value == best_value:
+                best_move.append(moves[0][j])
+    
+    return random.choice(meilleurs_coups) 
 
 def chose_random(liste):
     if len(liste) == 2:
@@ -117,28 +140,17 @@ def chose_random(liste):
         element_choisi = random.choice(liste)
 
     return element_choisi
-
+def make_move(board, move, pawn) :
+    old_position = evaluate_board(board, pawn)
+    new_poition = move
+    board[old_position[0]][old_position[1]]=2.0
+    board[new_poition[0]][new_poition[1]]=pawn
+    new_board = board
+    return new_board
 # Fonction pour effectuer un coup sur le plateau
 
 # Algorithme minimax avec élagage alpha-bêta
-def minimax(board, depth, maximizing_player):
-    if depth == 0 or game_over(board):
-        return evaluate_board(board)
-    
-    if maximizing_player:
-        max_eval = float('-inf')
-        for move in generate_moves(board):
-            new_board = make_move(board, move)
-            eval = minimax(new_board, depth - 1, False)
-            max_eval = max(max_eval, eval)
-        return max_eval
-    else:
-        min_eval = float('inf')
-        for move in generate_moves(board):
-            new_board = make_move(board, move)
-            eval = minimax(new_board, depth - 1, True)
-            min_eval = min(min_eval, eval)
-        return min_eval
+def ia(board):
 
 # Fonction pour choisir le meilleur coup à jouer pour l'IA
 def choose_move(board, pawn):
@@ -160,17 +172,7 @@ def choose_move(board, pawn):
     return moove
 #Principal code :
 
-board = state["board"]
-if state["players"][0]=="PDF_gang" :
-    My_Blockers = state["blockers"][0]
-    Ennemy_Blockers = state["blockers"][1]
-    My_pawn = PAWN1
-    ennemy_pawn = PAWN2
-elif state["players"][1]=="PDF_gang":
-    My_Blockers = state["blockers"][1]
-    Ennemy_Blockers = state["blockers"][0]
-    My_pawn = PAWN2
-    ennemy_pawn = PAWN1
+
 
 #print(generate_moves(board,PAWN2))
 #d = generate_moves(board,PAWN2)
