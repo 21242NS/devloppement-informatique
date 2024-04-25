@@ -1,5 +1,13 @@
 import socket
 import json
+from Algo import choose_move
+
+PAWN1 = 0.0
+PAWN2 = 1.0
+EMPTY_PAWN = 2.0
+EMPTY_BLOCKER = 3.0
+BLOCKER = 4.0
+IMP = 5.0
 
 local_ip = 'localhost'
 server_ip = '172.17.3.30'  # Adresse IP du serveur
@@ -44,7 +52,6 @@ class Client:
         except Exception as e:
             print("Une erreur s'est produite lors de l'envoi de la requête:", e)
             return None
-client = Client(request_data)
 
 class Server:
     def __init__(self):
@@ -94,18 +101,34 @@ class Server:
         
 server = Server()
 # Exemple d'utilisation de la fonction send_request_to_server
+
+
+
+
+
+#Prinipal code
+client = Client(request_data)
 response = client.send_request_to_server()
-
-state = server.move_comm()
-
 if response is not None:
     print("Réponse du serveur:", response)
 else:
     print("Aucune réponse reçue du serveur.")
-
 # Réponse au ping
 ping_response = server.respond_to_ping()
 if ping_response:
     print("Le client a répondu au ping avec succès.")
 else:
     print("Une erreur s'est produite lors de la réponse au ping.")
+state = server.move_comm()
+board = state["board"]
+if state["players"][0]=="PDF_gang" :
+    My_Blockers = state["blockers"][0]
+    Ennemy_Blockers = state["blockers"][1]
+    My_pawn = PAWN1
+    ennemy_pawn = PAWN2
+elif state["players"][1]=="PDF_gang":
+    My_Blockers = state["blockers"][1]
+    Ennemy_Blockers = state["blockers"][0]
+    My_pawn = PAWN2
+    ennemy_pawn = PAWN1
+move = choose_move(board, My_pawn)
