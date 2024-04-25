@@ -7,7 +7,12 @@ sortie :
 import copy
 import random
 import json
-
+PAWN1 = 0.0
+PAWN2 = 1.0
+EMPTY_PAWN = 2.0
+EMPTY_BLOCKER = 3.0
+BLOCKER = 4.0
+IMP = 5.0
 
 
 
@@ -25,35 +30,35 @@ def evaluate_board(board, pawn):
                     position = [i,j]
                     condition = True
     return position
-def peut_passer(board, pos_depart, pos_final):
-    case_a_checker_x = 0
-    case_a_checker_y = 0
+def can_move(board, start_pos, final_pos):
+    box_to_check_x = 0
+    box_to_check_y = 0
     for i in range(2) :
-        if pos_final[i]-pos_depart[i]==0 or pos_final[i]-pos_depart[i] ==2 or pos_final[i]-pos_depart[i]==-2 :
+        if final_pos[i]-start_pos[i]==0 or final_pos[i]-start_pos[i] ==2 or final_pos[i]-start_pos[i]==-2 :
             if i == 0 :
-                case_a_checker_x = int((pos_final[i] - pos_depart[i])/2+pos_depart[i])
+                box_to_check_x = int((final_pos[i] - start_pos[i])/2+start_pos[i])
             else :
-                case_a_checker_y = int((pos_final[i] - pos_depart[i])/2+pos_depart[i])
+                box_to_check_y = int((final_pos[i] - start_pos[i])/2+start_pos[i])
         else :
             return False
-    if case_a_checker_x>=len(board) or case_a_checker_y>=len(board):
+    if box_to_check_x>=len(board) or box_to_check_y>=len(board):
         return False
-    elif board[case_a_checker_x][case_a_checker_y]== EMPTY_BLOCKER :
+    elif board[box_to_check_x][box_to_check_y]== EMPTY_BLOCKER :
         return True 
     else :
         return False
-def peut_mettre_blockeurs(board, pos_blocker1, pos_blocker2):
-    case_mid_x = 0
-    case_mid_y =0
+def can_place_blocker(board, pos_blocker1, pos_blocker2):
+    mid_box_x = 0
+    mid_box_y =0
     for i in range(len(pos_blocker1)) :
         if pos_blocker1[i]-pos_blocker2[i]==0 or pos_blocker1[i]-pos_blocker2[i] ==2 or pos_blocker1[i]-pos_blocker2[i]==-2 :
             res = True
         else :
             return False
     if board[pos_blocker1[0]][pos_blocker1[1]] == EMPTY_BLOCKER and board[pos_blocker2[0]][pos_blocker2[1]]== EMPTY_BLOCKER :
-        case_mid_x = int((pos_blocker1[0]-pos_blocker2[0])/2+pos_blocker2[0])
-        case_mid_y=int((pos_blocker1[1]-pos_blocker2[1])/2+pos_blocker2[1])
-        if board[case_mid_x][case_mid_y]==EMPTY_PAWN or board[case_mid_x][case_mid_y] == PAWN1 or board[case_mid_x][case_mid_y] == PAWN2 or board[case_mid_x][case_mid_y] == BLOCKER :
+        mid_box_x = int((pos_blocker1[0]-pos_blocker2[0])/2+pos_blocker2[0])
+        mid_box_y=int((pos_blocker1[1]-pos_blocker2[1])/2+pos_blocker2[1])
+        if board[mid_box_x][mid_box_y]==EMPTY_PAWN or board[mid_box_x][mid_box_y] == PAWN1 or board[mid_box_x][mid_box_y] == PAWN2 or board[mid_box_x][mid_box_y] == BLOCKER :
             return False
         else :
             return True
@@ -73,7 +78,7 @@ def generate_moves(board, pawn, My_Blockers):
     p_moves_b = [pos_up,pos_left,pos_right,pos_down]
     p_moves_a = []
     for i in range(len(p_moves_b)) :
-        if peut_passer(board,pos,p_moves_b[i]):
+        if can_move(board,pos,p_moves_b[i]):
             p_moves_a.append([p_moves_b[i]])
     #part for the blockers :
     if My_Blockers > 0:
@@ -88,7 +93,7 @@ def generate_moves(board, pawn, My_Blockers):
                 if x<len(board):
                     b_move.append([[i,j],[i,x]])
         for i in range(len(b_move)):
-            if peut_mettre_blockeurs(board,b_move[i][0],b_move[i][1]):
+            if can_place_blocker(board,b_move[i][0],b_move[i][1]):
                 b_move_a.append(b_move[i])
         all_moves=[p_moves_a,b_move_a]
     else : 
@@ -113,16 +118,16 @@ def chose_best_moves(board, pawn, blocker):
     best_value = float('-inf')
     moves = generate_moves(board,pawn, blocker)
     Value = evaluate_move(board, pawn)
-    if Value<evaluate_move(board, )
-    for j in range(len(moves[0])):
-        new_board = make_move(board, moves[0][j], pawn)
-        if Value-evaluate_move(new_board,pawn)>=0 :
-            Value = evaluate_board(new_board, pawn)
-            if Value > best_value:
-                best_move = [moves[0][j]]
-                best_value = Value
-            elif Value == best_value:
-                best_move.append(moves[0][j])
+    if Value<evaluate_move(board, ):
+        for j in range(len(moves[0])):
+            new_board = make_move(board, moves[0][j], pawn)
+            if Value-evaluate_move(new_board,pawn)>=0 :
+                Value = evaluate_board(new_board, pawn)
+                if Value > best_value:
+                    best_move = [moves[0][j]]
+                    best_value = Value
+                elif Value == best_value:
+                    best_move.append(moves[0][j])
     
     return random.choice(meilleurs_coups) 
 
@@ -150,7 +155,7 @@ def make_move(board, move, pawn) :
 # Fonction pour effectuer un coup sur le plateau
 
 # Algorithme minimax avec élagage alpha-bêta
-def ia(board):
+
 
 # Fonction pour choisir le meilleur coup à jouer pour l'IA
 def choose_move(board, pawn):
