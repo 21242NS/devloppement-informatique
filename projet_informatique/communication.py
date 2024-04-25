@@ -96,8 +96,9 @@ class Server:
                 client, adrr = self.__server_socket.accept()
                 # Reçois l'état du jeu
                 data = client.recv(2048).decode('utF8')
-                state = json.loads(data)
-                status = state["state"]
+                move_data = json.loads(data)
+                global status
+                status = move_data["state"]
                 print(status)
                 # Envoie notre coup
                 self.send_move()
@@ -133,16 +134,15 @@ if ping_response:
     print("Le client a répondu au ping avec succès.")
 else:
     print("Une erreur s'est produite lors de la réponse au ping.")
-state = server.move_comm()
-board = state["board"]
-if state["players"][0]=="PDF_gang" :
-    My_Blockers = state["blockers"][0]
-    Ennemy_Blockers = state["blockers"][1]
+board = status["board"]
+if status["players"][0]=="PDF_gang" :
+    My_Blockers = status["blockers"][0]
+    Ennemy_Blockers = status["blockers"][1]
     My_pawn = PAWN1
     ennemy_pawn = PAWN2
-elif state["players"][1]=="PDF_gang":
-    My_Blockers = state["blockers"][1]
-    Ennemy_Blockers = state["blockers"][0]
+elif status["players"][1]=="PDF_gang":
+    My_Blockers = status["blockers"][1]
+    Ennemy_Blockers = status["blockers"][0]
     My_pawn = PAWN2
     ennemy_pawn = PAWN1
 move = choose_move(board, My_pawn)
