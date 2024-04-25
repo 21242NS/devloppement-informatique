@@ -78,8 +78,6 @@ class Server:
             print("Une erreur s'est produite lors de la réponse au ping:", e)
             #raise e
             return False
-        finally:
-            self.__server_socket.close()
     def move_comm(self):
         try:
             self.__server_socket.listen()
