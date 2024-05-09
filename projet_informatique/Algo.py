@@ -162,7 +162,7 @@ def make_move(board, move, pawn) :
 
 
 # Fonction pour choisir le meilleur coup à jouer pour l'IA
-def choose_move(board, pawn):
+def choose_move(board, pawn, blocker):
     #best_move = None
     #best_eval = float('-inf')
     #for move in generate_moves(board):
@@ -171,7 +171,7 @@ def choose_move(board, pawn):
         #if eval > best_eval:
             #best_eval = eval
             #best_move = move
-    random_moove = chose_random(generate_moves(board, pawn))
+    random_moove = chose_random(generate_moves(board, pawn, blocker))
     if len(random_moove)==2 :
         moove = {"type":"blocker",
                  "position":random_moove}

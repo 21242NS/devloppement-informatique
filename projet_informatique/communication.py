@@ -131,4 +131,4 @@ elif state["players"][1]=="PDF_gang":
     Ennemy_Blockers = state["blockers"][0]
     My_pawn = PAWN2
     ennemy_pawn = PAWN1
-move = choose_move(board, My_pawn)
+move = choose_move(board, My_pawn, My_Blockers)
