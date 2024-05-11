@@ -117,23 +117,11 @@ def evaluate_move(board, pawn):
         value += distance_objectif
     return value
 
-def chose_best_moves(board, pawn, blocker):
-    best_move = []
-    best_value = float('-inf')
-    moves = generate_moves(board,pawn, blocker)
-    Value = evaluate_move(board, pawn)
-    if Value<evaluate_move(board, ):
-        for j in range(len(moves[0])):
-            new_board = make_move(board, moves[0][j], pawn)
-            if Value-evaluate_move(new_board,pawn)>=0 :
-                Value = evaluate_board(new_board, pawn)
-                if Value > best_value:
-                    best_move = [moves[0][j]]
-                    best_value = Value
-                elif Value == best_value:
-                    best_move.append(moves[0][j])
+def minimax(node, depht, pawn1, pawn2,alpha, beta) :
     
-    return random.choice(meilleurs_coups) 
+    
+    
+    return random.choice(best_move) 
 
 def chose_random(liste):
     if len(liste) == 2:
@@ -178,7 +166,11 @@ def choose_move(board, pawn, blocker):
     else :
         moove = {"type":"Pawn",
                  "position":random_moove}
-    return moove
+    response = {"respone":"move",
+                "move":moove,
+                "message": "j'aime manger du chcolat"
+                }
+    return response
 
 
 
