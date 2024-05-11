@@ -15,10 +15,11 @@ server_port = 3000  # Port du serveur
 
 request_data = {
     "request": "subscribe",
-    "port": 3000,
+    "port": 3007,
     "name": "PDF_gang",
     "matricules": ["12346", "67891"]
 }
+finished = False
 
 class Client:
     def __init__(self, request_data):
@@ -38,7 +39,7 @@ class Client:
             self.__client_socket.sendall(request_json.encode())
 
             # Attendre la réponse du serveur
-            response_json = self.__client_socket.recv(1024).decode()
+            response_json = self.__client_socket.recv(2048).decode()
 
             # Convertir la réponse JSON en dictionnaire
             response_data = json.loads(response_json)
@@ -57,78 +58,88 @@ class Server:
     def __init__(self):
         # Créer un socket TCP
         self.__server_socket = socket.socket()
+        self.__server_socket.settimeout(0.5)
         # Établir une connexion avec le client
-        self.__server_socket.bind((local_ip, server_port))
+        self.__server_socket.bind((local_ip, 3007))
+        # Mettre move dans la class
 
-    def respond_to_ping(self):
+    def listen(self):
         try:
             self.__server_socket.listen() 
             
             while True:
-                client, adrr = self.__server_socket.accept()
-                # Attendre la demande du client
-                data = client.recv(1024).decode()
-                request_ping = json.loads(data)
-                # Vérifier si la demande est un "ping"
-                
-                if request_ping.get("request") == "ping":
+                try:
+                    client, adrr = self.__server_socket.accept()
+                    # Attendre la demande du client
+                    with client:
+                        chunks = []
+                        finished = False
+                        while not finished:
+                            data = client.recv(2048)
+                            chunks.append(data)
+                            finished = data
+                        data.decode("utf-8")
+                        global request
+                        request = json.loads(data)
+                        # Vérifier si la demande est un "ping"
+                        
+                        if request.get("request") == "ping":
 
-                    # Répondre avec "pong"
-                    response_data = {"response": "pong"}
-                    response_ping = json.dumps(response_data)
-                    client.sendall(response_ping.encode())
-                    return True
-                else:
-                    return False
+                            # Répondre avec "pong"
+                            response_data = {"response": "pong"}
+                            response_ping = json.dumps(response_data)
+                            client.sendall(response_ping.encode("utf-8"))
+                            print("response sended", response_ping)
+                            
+                        elif request.get("request") == "play":
+                            self.move_comm() # compute a move and send it to client
+                            #raise NotImplemented()
+                except socket.timeout:
+                    pass        
 
         except Exception as e:
             print("Une erreur s'est produite lors de la réponse au ping:", e)
-            #raise e
-            return False
+            raise e
+
     def move_comm(self):
-        try:
-            self.__server_socket.listen()
+        status = request["state"]
+        print(status)
+        board = status["board"]
+        if status["players"][0]=="PDF_gang" :
+            My_Blockers = status["blockers"][0]
+            Ennemy_Blockers = status["blockers"][1]
+            My_pawn = PAWN1
+            ennemy_pawn = PAWN2
+        elif status["players"][1]=="PDF_gang":
+            My_Blockers = status["blockers"][1]
+            Ennemy_Blockers = status["blockers"][0]
+            My_pawn = PAWN2
+            ennemy_pawn = PAWN1
+        global move
+        move = choose_move(board, My_pawn, My_Blockers)
+        # Envoie notre coup
+        raise self.send_move()
+    # Le coup à faire
+    def send_move(self):
+        totalsend = 0
+        move_send = json.dumps(move).encode('utF8')
+        print(move_send)
+        while totalsend < len(move_send):
+            sent = self.__server_socket.send(move_send)
+            totalsend += sent
 
-            while True:
-                client, adrr = self.__server_socket.accept()
-                data = client.recv(1024).decode()
-                state = json.loads(data)
-                status = state["state"]
-                return status
-        except Exception as e:
-            print("Une erreur s'est produite:", e)
-            return False
-        
+client = Client(request_data)
 server = Server()
-# Exemple d'utilisation de la fonction send_request_to_server
-
-
-
-
 
 #Prinipal code
-client = Client(request_data)
 response = client.send_request_to_server()
+#playing = server.move_comm()
 if response is not None:
     print("Réponse du serveur:", response)
 else:
     print("Aucune réponse reçue du serveur.")
 # Réponse au ping
-ping_response = server.respond_to_ping()
-if ping_response:
-    print("Le client a répondu au ping avec succès.")
-else:
-    print("Une erreur s'est produite lors de la réponse au ping.")
-state = server.move_comm()
-board = state["board"]
-if state["players"][0]=="PDF_gang" :
-    My_Blockers = state["blockers"][0]
-    Ennemy_Blockers = state["blockers"][1]
-    My_pawn = PAWN1
-    ennemy_pawn = PAWN2
-elif state["players"][1]=="PDF_gang":
-    My_Blockers = state["blockers"][1]
-    Ennemy_Blockers = state["blockers"][0]
-    My_pawn = PAWN2
-    ennemy_pawn = PAWN1
-move = choose_move(board, My_pawn, My_Blockers)
+try:
+    server.listen()
+except KeyboardInterrupt:
+    print("bye")
