@@ -12,7 +12,23 @@ EMPTY_PAWN = 2.0
 EMPTY_BLOCKER = 3.0
 BLOCKER = 4.0
 IMP = 5.0
-
+board = [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
 
 
 
@@ -68,12 +84,13 @@ def can_place_blocker(board, pos_blocker1, pos_blocker2):
     else :
         return False
 # Function which generates all possible moves
-def generate_moves(board, pawn, My_Blockers):
+def generate_moves(board, pawn, My_Blockers, pawn2):
     
     b_move= [] # Creation of a list of positions of my blockers
     b_move_a=[] # Creation of a list of positions of my blockers that i can place
     #part for the pawn:
-    pos = evaluate_board(board, pawn) # Finding my position
+    pos = evaluate_board(board, pawn)
+    pos_e = evaluate_board(board, pawn2) # Finding my position
     # Create all my moves
     pos_up= [pos[0]-2,pos[1]]
     pos_down=[pos[0]+2,pos[1]]
@@ -85,7 +102,7 @@ def generate_moves(board, pawn, My_Blockers):
         if can_move(board,pos,p_moves_b[i]):
             p_moves_a.append([p_moves_b[i]])
     #part for the blockers :
-    if My_Blockers > 0:
+    if My_Blockers > 0: # two different loops for the blockers because there are vertical ones and the horizontal ones
         for i in range(1,len(board),2):
             for j in range(0,len(board[i]), 2) :
                 x = j+2
@@ -96,13 +113,14 @@ def generate_moves(board, pawn, My_Blockers):
                 x = j+2
                 if x<len(board):
                     b_move.append([[i,j],[i,x]])
-        for i in range(len(b_move)):
-            if can_place_blocker(board,b_move[i][0],b_move[i][1]):
+        for i in range(len(b_move)): #check of all my blockers for the rules
+            if can_place_blocker(board,b_move[i][0],b_move[i][1]) and -3<=b_move[i][0][0]-pos_e[0]<=3 and -3<=b_move[i][0][1]-pos_e[1]<=3: #limitation of the possibility of blockers so we gain time
                 b_move_a.append(b_move[i])
         all_moves=[p_moves_a,b_move_a]
     else : 
         all_moves = p_moves_a
     return all_moves
+#function to find the distance between a pawn and his target
 def distance(board, pawn):
     pos = evaluate_board(board, pawn)
     if pawn == 1.0:
@@ -110,38 +128,69 @@ def distance(board, pawn):
     elif pawn == 0.0:
         res = len(board)-1-pos[0]
     return res
+#function to evaluate how many time i need to play to win
 def evaluate_move(board, pawn):
     value = 0
+    pos = evaluate_board(board,pawn)
     distance_objectif = distance(board, pawn)
-    if distance_objectif == 0:
+    if distance_objectif != 0:
         value += distance_objectif
+        if pawn ==PAWN1 :    
+            if board[pos[0]+1][pos[1]] == BLOCKER :
+                value+=1
+        elif pawn == PAWN2:
+            if board[pos[0]-1][pos[1]] == BLOCKER :
+                value+=1
+    elif distance_objectif == 0:
+        value = 0
+    
     return value
-
-def minimax(node, depht, pawn1, pawn2,alpha, beta) :
-    
-    
-    
+#function that evalute the best move with the strategy that we must do less play that the ennemy
+def best_move(pawn1, pawn2, my_blocker, board) :
+    best_move = []
+    moves = generate_moves(board,pawn1,my_blocker,pawn2)
+    my_value=evaluate_move(board,pawn1)
+    if pawn1 == PAWN1 :
+        for i in range(len(moves)) :
+            for j in range(len(moves[i])):
+                new_board = make_move(board,moves[i][j],pawn1)
+                my_new_value=evaluate_move(new_board,pawn1)
+                ennemy_new_value=evaluate_move(new_board,pawn2)
+                if my_new_value <= my_value and my_new_value <= ennemy_new_value:
+                    best_move.append(moves[i][j])
+    elif pawn1 == PAWN2 :
+        for i in range(len(moves)) :
+            for j in range(len(moves[i])):
+                new_board = make_move(board,moves[i][j],pawn1)
+                my_new_value=evaluate_move(new_board,pawn1)
+                ennemy_new_value=evaluate_move(new_board,pawn2)
+                if my_new_value <= my_value and my_new_value < ennemy_new_value:
+                    best_move.append(moves[i][j])
     return random.choice(best_move) 
 
-def chose_random(liste):
-    if len(liste) == 2:
-        sous_liste_1 = liste[0]
-        sous_liste_2 = liste[1]
+#def chose_random(liste):
+    #if len(liste) == 2:
+        #sous_liste_1 = liste[0]
+        #sous_liste_2 = liste[1]
 
         # Choix aléatoire de l'une des sous-listes
-        sous_liste_choisie = random.choice([sous_liste_1, sous_liste_2])
+        #sous_liste_choisie = random.choice([sous_liste_1, sous_liste_2])
 
         # Choix aléatoire d'un élément dans la sous-liste choisie
-        element_choisi = random.choice(sous_liste_choisie)
-    else:
-        element_choisi = random.choice(liste)
+        #element_choisi = random.choice(sous_liste_choisie)
+    #else:
+        #element_choisi = random.choice(liste)
 
-    return element_choisi
+    #return element_choisi
 def make_move(board, move, pawn) :
     old_position = evaluate_board(board, pawn)
     new_poition = move
-    board[old_position[0]][old_position[1]]=2.0
-    board[new_poition[0]][new_poition[1]]=pawn
+    if len(move)==2:
+        for i in range(len(move)):
+            board[move[i][0]][move[i][1]]=BLOCKER
+    else :    
+        board[old_position[0]][old_position[1]]=2.0
+        board[new_poition[0][0]][new_poition[0][1]]=pawn
     new_board = board
     return new_board
 
@@ -150,7 +199,7 @@ def make_move(board, move, pawn) :
 
 
 # Fonction pour choisir le meilleur coup à jouer pour l'IA
-def choose_move(board, pawn, blocker):
+def choose_move(board, pawn1, blocker, pawn2):
     #best_move = None
     #best_eval = float('-inf')
     #for move in generate_moves(board):
@@ -160,13 +209,13 @@ def choose_move(board, pawn, blocker):
             #best_eval = eval
             #best_move = move
     good_moove = best_move(pawn1,pawn2, blocker,board)
-    if len(random_moove)==2 :
+    if len(good_moove)==2 :
         moove = {"type":"blocker",
                  "position":good_moove}
     else :
         moove = {"type":"Pawn",
                  "position":good_moove}
-    response = {"response":"move",
+    response = {"respone":"move",
                 "move":moove,
                 "message": "j aime manger du chcolat"
                 }
