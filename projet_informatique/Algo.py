@@ -143,17 +143,21 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 ennemy_new_value=evaluate_move(new_board,pawn2)
                 if my_new_value <= my_value and my_new_value <= ennemy_new_value:
                     best_move.append(moves[i][j])
+        if len(best_move)==0 :
+            best_move = moves
     elif pawn1 == PAWN2 :
         for i in range(len(moves)) :
             for j in range(len(moves[i])):
                 new_board = make_move(board,moves[i][j],pawn1)
                 my_new_value=evaluate_move(new_board,pawn1)
                 ennemy_new_value=evaluate_move(new_board,pawn2)
+                print(type(my_new_value))
+                print(type(ennemy_new_value))
                 if my_new_value <= my_value and my_new_value < ennemy_new_value:
                     best_move.append(moves[i][j])
-    elif len(best_move)==0:
-        best_move=moves
-    print(best_move)
+        if len(best_move)==0 :
+            best_move = moves
+
     return random.choice(best_move) 
 
 #def chose_random(liste):
