@@ -4,7 +4,7 @@ date : 6 fevrier 2024
 entrée : 
 sortie : 
 """
-import copy
+
 import random
 PAWN1 = 0.0
 PAWN2 = 1.0
@@ -12,23 +12,7 @@ EMPTY_PAWN = 2.0
 EMPTY_BLOCKER = 3.0
 BLOCKER = 4.0
 IMP = 5.0
-board = [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-         [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-         [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
+
 
 
 
@@ -182,6 +166,7 @@ def best_move(pawn1, pawn2, my_blocker, board) :
         #element_choisi = random.choice(liste)
 
     #return element_choisi
+#function that return me a new board with the move
 def make_move(board, move, pawn) :
     old_position = evaluate_board(board, pawn)
     new_poition = move
@@ -198,24 +183,16 @@ def make_move(board, move, pawn) :
 
 
 
-# Fonction pour choisir le meilleur coup à jouer pour l'IA
+# Funtion that return the message for the move
 def choose_move(board, pawn1, blocker, pawn2):
-    #best_move = None
-    #best_eval = float('-inf')
-    #for move in generate_moves(board):
-        #new_board = make_move(board, move)
-        #eval = minimax(new_board, depth=3, maximizing_player=False)  # Profondeur de recherche limitée
-        #if eval > best_eval:
-            #best_eval = eval
-            #best_move = move
     good_moove = best_move(pawn1,pawn2, blocker,board)
-    if len(good_moove)==2 :
+    if len(good_moove)==2 : #for a blocker
         moove = {"type":"blocker",
                  "position":good_moove}
-    else :
-        moove = {"type":"Pawn",
+    else :#for the pawn
+        moove = {"type":"pawn",
                  "position":good_moove}
-    response = {"respone":"move",
+    response = {"response":"move",#message that we send to do a move
                 "move":moove,
                 "message": "j aime manger du chcolat"
                 }
