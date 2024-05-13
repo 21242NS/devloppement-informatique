@@ -121,7 +121,7 @@ class Server:
             Ennemy_Blockers = status["blockers"][0]
             My_pawn = PAWN2
             ennemy_pawn = PAWN1
-        move = choose_move(board, My_pawn, My_Blockers)
+        move = choose_move(board, My_pawn, My_Blockers,ennemy_pawn)
         move_send = json.dumps(move).encode('utf-8')
         print(move_send)
         return move_send
