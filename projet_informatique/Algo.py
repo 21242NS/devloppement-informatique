@@ -45,7 +45,7 @@ def can_move(board, start_pos, final_pos):
             return False
     if box_to_check_x>=len(board) or box_to_check_y>=len(board): # check the fact that it has no blocker 
         return False
-    elif board[box_to_check_x][box_to_check_y]== EMPTY_BLOCKER :
+    elif board[box_to_check_x][box_to_check_y]== EMPTY_BLOCKER and board[final_pos[0]][final_pos[1]]==EMPTY_PAWN :
         return True 
     else :
         return False
@@ -187,11 +187,14 @@ def make_move(board, move, pawn) :
 def choose_move(board, pawn1, blocker, pawn2):
     good_moove = best_move(pawn1,pawn2, blocker,board)
     if len(good_moove)==2 : #for a blocker
+        move_to_send_b=[[good_moove[0][0]/2,good_moove[0][1]/2],[good_moove[1][0]/2,good_moove[1][1]/2]]
+        print(move_to_send_b)
         moove = {"type":"blocker",
-                 "position":good_moove}
+                 "position":move_to_send_b}
     else :#for the pawn
+        move_to_send=[[good_moove[0][0]/2,good_moove[0][1]/2]]
         moove = {"type":"pawn",
-                 "position":good_moove}
+                 "position":move_to_send}
     response = {"response":"move",#message that we send to do a move
                 "move":moove,
                 "message": "j aime manger du chcolat"
