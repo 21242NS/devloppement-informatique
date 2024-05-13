@@ -157,7 +157,8 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 my_new_value=evaluate_move(new_board,pawn1)
                 ennemy_new_value=evaluate_move(new_board,pawn2)
                 if my_new_value <= my_value and my_new_value <= ennemy_new_value:
-                    best_move.append(moves[i][j])
+                    if is_winnable(new_board) :
+                        best_move.append(moves[i][j])
         if len(best_move)==0 :
             res2 = chose_random(moves)
             return res2
@@ -167,8 +168,8 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 new_board = make_move(board,moves[i][j],pawn1)
                 my_new_value=evaluate_move(new_board,pawn1)
                 ennemy_new_value=evaluate_move(new_board,pawn2)
-                if my_new_value <= my_value and my_new_value < ennemy_new_value:
-                    best_move.append(moves[i][j])
+                if is_winnable(new_board) :
+                        best_move.append(moves[i][j])
         if len(best_move)==0 :
             res2 = chose_random(moves)
             return res2
@@ -206,9 +207,55 @@ def make_move(board, move, pawn) :
             board[new_position[0][0]][new_position[0][1]]
     new_board = board
     return new_board
-def is_winable(board):
-    
-    return
+def is_winnable(board, pawn1, pawn2):
+  """
+  Checks if the current board state is winnable for both players.
+
+  Args:
+      board: A 2D list representing the Quoridor board.
+      pawn1: The value representing Player 1's pawn (e.g., 0.0).
+      pawn2: The value representing Player 2's pawn (e.g., 1.0).
+
+  Returns:
+      True if both players have a reachable winning position, False otherwise.
+  """
+
+  def check_reachable_winning_position(pawn, target_row):
+    """
+    Checks if the given pawn can reach the target row (winning position).
+
+    Args:
+        pawn: The value representing the pawn (pawn1 or pawn2).
+        target_row: The row number of the winning position (0 for pawn1, len(board) - 1 for pawn2).
+
+    Returns:
+        True if the pawn can reach the target row, False otherwise.
+    """
+
+    pawn_pos = evaluate_board(board, pawn)  # Find pawn's current position
+
+    # Check if pawn is already in the winning row
+    if pawn_pos[0] == target_row:
+      return True
+
+    # Check if there are any empty spaces in the target row
+    for col in range(len(board[0])):
+      if board[target_row][col] == EMPTY_PAWN:
+        return True  # Can reach target row if empty space exists
+
+    # Recursively check if a reachable path exists for pawn movement
+    # (This part can be optimized for performance if needed)
+    for move in generate_moves(board, pawn, 0, pawn2 if pawn == pawn1 else pawn1):  # Consider all possible moves
+      new_board = make_move(board.copy(), move[0], pawn)  # Simulate the move
+      if check_reachable_winning_position(pawn, target_row, new_board):  # Check if winnable from this move
+        return True
+
+    return False  # No reachable path found for this pawn
+
+  # Check winnability for both players
+  return check_reachable_winning_position(pawn1, 0) and check_reachable_winning_position(pawn2, len(board) - 1)
+
+
 
 
 
