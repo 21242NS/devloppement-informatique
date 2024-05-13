@@ -159,13 +159,13 @@ def choose_move(board, pawn, blocker):
         #if eval > best_eval:
             #best_eval = eval
             #best_move = move
-    random_moove = chose_random(generate_moves(board, pawn, blocker))
+    good_moove = best_move(pawn1,pawn2, blocker,board)
     if len(random_moove)==2 :
         moove = {"type":"blocker",
-                 "position":random_moove}
+                 "position":good_moove}
     else :
         moove = {"type":"Pawn",
-                 "position":random_moove}
+                 "position":good_moove}
     response = {"response":"move",
                 "move":moove,
                 "message": "j aime manger du chcolat"
