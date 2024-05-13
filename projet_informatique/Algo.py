@@ -49,6 +49,7 @@ def can_move(board, start_pos, final_pos):
         return True 
     else :
         return False
+
 # Function wich tell me if i can place a blocker
 def can_place_blocker(board, pos_blocker1, pos_blocker2):
     mid_box_x = 0 #initialisation of my variable in x
@@ -190,15 +191,18 @@ def chose_random(liste):
     return element_choisi
 def make_move(board, move, pawn) :
     old_position = evaluate_board(board, pawn)
-    new_poition = move
+    new_position = move
     if len(move)==2:
         for i in range(len(move)):
             board[move[i][0]][move[i][1]]=BLOCKER
     else :    
         board[old_position[0]][old_position[1]]=2.0
-        board[new_poition[0][0]][new_poition[0][1]]=pawn
+        board[new_position[0][0]][new_position[0][1]]=pawn
     new_board = board
     return new_board
+def is_winable(board):
+    
+    return
 
 
 
