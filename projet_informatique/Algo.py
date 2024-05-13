@@ -166,9 +166,9 @@ def choose_move(board, pawn, blocker):
     else :
         moove = {"type":"Pawn",
                  "position":random_moove}
-    response = {"respone":"move",
+    response = {"response":"move",
                 "move":moove,
-                "message": "j'aime manger du chcolat"
+                "message": "j aime manger du chcolat"
                 }
     return response
 
