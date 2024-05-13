@@ -103,6 +103,7 @@ def generate_moves(board, pawn, My_Blockers, pawn2):
         all_moves=[p_moves_a,b_move_a]
     else : 
         all_moves = p_moves_a
+    print(all_moves)
     return all_moves
 #function to find the distance between a pawn and his target
 def distance(board, pawn):
@@ -142,6 +143,7 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 ennemy_new_value=evaluate_move(new_board,pawn2)
                 if my_new_value <= my_value and my_new_value <= ennemy_new_value:
                     best_move.append(moves[i][j])
+                #elif
     elif pawn1 == PAWN2 :
         for i in range(len(moves)) :
             for j in range(len(moves[i])):
@@ -150,6 +152,7 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 ennemy_new_value=evaluate_move(new_board,pawn2)
                 if my_new_value <= my_value and my_new_value < ennemy_new_value:
                     best_move.append(moves[i][j])
+    print(best_move)
     return random.choice(best_move) 
 
 #def chose_random(liste):
@@ -187,19 +190,33 @@ def make_move(board, move, pawn) :
 def choose_move(board, pawn1, blocker, pawn2):
     good_moove = best_move(pawn1,pawn2, blocker,board)
     if len(good_moove)==2 : #for a blocker
-        move_to_send_b=[[good_moove[0][0]/2,good_moove[0][1]/2],[good_moove[1][0]/2,good_moove[1][1]/2]]
-        print(move_to_send_b)
         moove = {"type":"blocker",
-                 "position":move_to_send_b}
+                 "position":good_moove}
     else :#for the pawn
-        move_to_send=[[good_moove[0][0]/2,good_moove[0][1]/2]]
         moove = {"type":"pawn",
-                 "position":move_to_send}
+                 "position":good_moove}
     response = {"response":"move",#message that we send to do a move
                 "move":moove,
                 "message": "j aime manger du chcolat"
                 }
     return response
-
+board =     [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
+             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
+             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
+print(choose_move(board,PAWN2,10,PAWN1))
 
 
