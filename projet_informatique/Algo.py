@@ -157,7 +157,7 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 my_new_value=evaluate_move(new_board,pawn1)
                 ennemy_new_value=evaluate_move(new_board,pawn2)
                 if my_new_value <= my_value and my_new_value <= ennemy_new_value:
-                    if is_winnable(new_board) :
+                    if is_winnable(new_board,PAWN1,PAWN2) :
                         best_move.append(moves[i][j])
         if len(best_move)==0 :
             res2 = chose_random(moves)
@@ -168,7 +168,7 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 new_board = make_move(board,moves[i][j],pawn1)
                 my_new_value=evaluate_move(new_board,pawn1)
                 ennemy_new_value=evaluate_move(new_board,pawn2)
-                if is_winnable(new_board) :
+                if is_winnable(new_board,PAWN1,PAWN2) :
                         best_move.append(moves[i][j])
         if len(best_move)==0 :
             res2 = chose_random(moves)
