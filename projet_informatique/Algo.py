@@ -63,6 +63,16 @@ def can_place_blocker(board, pos_blocker1, pos_blocker2):
         mid_box_y=int((pos_blocker1[1]-pos_blocker2[1])/2+pos_blocker2[1])
         if board[mid_box_x][mid_box_y]==EMPTY_PAWN or board[mid_box_x][mid_box_y] == PAWN1 or board[mid_box_x][mid_box_y] == PAWN2 or board[mid_box_x][mid_box_y] == BLOCKER : # check teh fact that between the box it is an intersection
             return False
+        elif mid_box_x == pos_blocker1[0] :
+            horizontal_axe_1=mid_box_y+1
+            horizontal_axe_2=mid_box_y-1
+            if board[mid_box_x][horizontal_axe_1]==BLOCKER and board[mid_box_x][horizontal_axe_2] == BLOCKER :
+                return False
+        elif mid_box_y == pos_blocker1[1] :
+            vertical_axe_1 =mid_box_x+1
+            vertical_axe_2 =mid_box_x-1
+            if board[vertical_axe_1][mid_box_y]==BLOCKER and board[vertical_axe_2][mid_box_y] == BLOCKER :
+                return False
         else :
             return True
     else :
@@ -103,7 +113,6 @@ def generate_moves(board, pawn, My_Blockers, pawn2):
         all_moves=[p_moves_a,b_move_a]
     else : 
         all_moves = p_moves_a
-    print(all_moves)
     return all_moves
 #function to find the distance between a pawn and his target
 def distance(board, pawn):
@@ -135,7 +144,9 @@ def best_move(pawn1, pawn2, my_blocker, board) :
     best_move = []
     moves = generate_moves(board,pawn1,my_blocker,pawn2)
     my_value=evaluate_move(board,pawn1)
-    if pawn1 == PAWN1 :
+    if len(moves)==0:
+        return "giveup"
+    elif pawn1 == PAWN1 :
         for i in range(len(moves)) :
             for j in range(len(moves[i])):
                 new_board = make_move(board,moves[i][j],pawn1)
@@ -151,8 +162,6 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 new_board = make_move(board,moves[i][j],pawn1)
                 my_new_value=evaluate_move(new_board,pawn1)
                 ennemy_new_value=evaluate_move(new_board,pawn2)
-                print(type(my_new_value))
-                print(type(ennemy_new_value))
                 if my_new_value <= my_value and my_new_value < ennemy_new_value:
                     best_move.append(moves[i][j])
         if len(best_move)==0 :
@@ -197,6 +206,9 @@ def choose_move(board, pawn1, blocker, pawn2):
     if len(good_moove)==2 : #for a blocker
         moove = {"type":"blocker",
                  "position":good_moove}
+    elif type(good_moove)==str: #when we must giveup
+        response = {"response":good_moove}
+        return response
     else :#for the pawn
         moove = {"type":"pawn",
                  "position":good_moove}
@@ -205,23 +217,5 @@ def choose_move(board, pawn1, blocker, pawn2):
                 "message": "j aime manger du chcolat"
                 }
     return response
-board =     [[2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 0.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0],
-             [3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0, 5.0, 3.0],
-             [2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 1.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0, 3.0, 2.0]]
-print(choose_move(board,PAWN2,10,PAWN1))
 
 
