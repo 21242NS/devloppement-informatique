@@ -158,7 +158,8 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 if my_new_value <= my_value and my_new_value <= ennemy_new_value:
                     best_move.append(moves[i][j])
         if len(best_move)==0 :
-            best_move = moves
+            res2 = chose_random(moves)
+            return res2
     elif pawn1 == PAWN2 :
         for i in range(len(moves)) :
             for j in range(len(moves[i])):
@@ -168,25 +169,25 @@ def best_move(pawn1, pawn2, my_blocker, board) :
                 if my_new_value <= my_value and my_new_value < ennemy_new_value:
                     best_move.append(moves[i][j])
         if len(best_move)==0 :
-            best_move = moves
+            res2 = chose_random(moves)
+            return res2
+    res = random.choice(best_move)
+    return res
 
-    return random.choice(best_move) 
-
-#def chose_random(liste):
-    #if len(liste) == 2:
-        #sous_liste_1 = liste[0]
-        #sous_liste_2 = liste[1]
+def chose_random(liste):
+    if len(liste) == 2:
+        sous_liste_1 = liste[0]
+        sous_liste_2 = liste[1]
 
         # Choix aléatoire de l'une des sous-listes
-        #sous_liste_choisie = random.choice([sous_liste_1, sous_liste_2])
+        sous_liste_choisie = random.choice([sous_liste_1, sous_liste_2])
 
-        # Choix aléatoire d'un élément dans la sous-liste choisie
-        #element_choisi = random.choice(sous_liste_choisie)
-    #else:
-        #element_choisi = random.choice(liste)
+         #Choix aléatoire d'un élément dans la sous-liste choisie
+        element_choisi = random.choice(sous_liste_choisie)
+    else:
+        element_choisi = random.choice(liste)
 
-    #return element_choisi
-#function that return me a new board with the move
+    return element_choisi
 def make_move(board, move, pawn) :
     old_position = evaluate_board(board, pawn)
     new_poition = move
@@ -203,22 +204,23 @@ def make_move(board, move, pawn) :
 
 
 
-# Funtion that return the message for the move
+# Fonction pour choisir le meilleur coup à jouer pour l'IA
 def choose_move(board, pawn1, blocker, pawn2):
     good_moove = best_move(pawn1,pawn2, blocker,board)
-    if len(good_moove)==2 : #for a blocker
+    if len(good_moove)==2 :
         moove = {"type":"blocker",
                  "position":good_moove}
     elif type(good_moove)==str: #when we must giveup
         response = {"response":good_moove}
-        return response
-    else :#for the pawn
+    else :
         moove = {"type":"pawn",
                  "position":good_moove}
-    response = {"response":"move",#message that we send to do a move
+    response = {"response":"move",
                 "move":moove,
                 "message": "j aime manger du chcolat"
                 }
     return response
+
+
 
 
