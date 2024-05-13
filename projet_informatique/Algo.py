@@ -192,12 +192,18 @@ def chose_random(liste):
 def make_move(board, move, pawn) :
     old_position = evaluate_board(board, pawn)
     new_position = move
-    if len(move)==2:
-        for i in range(len(move)):
-            board[move[i][0]][move[i][1]]=BLOCKER
-    else :    
-        board[old_position[0]][old_position[1]]=2.0
-        board[new_position[0][0]][new_position[0][1]]=pawn
+    if type(new_poition[0]) == int :
+        if len(new_poition) ==2 :
+            board[old_position[0]][old_position[1]]=2.0
+            board[new_poition[0]][new_poition[1]]=pawn
+
+    else :
+        if len(move)==2:
+            for i in range(len(move)):
+                board[move[i][0]][move[i][1]]=BLOCKER
+        else :    
+            board[old_position[0]][old_position[1]]=2.0
+            board[new_poition[0][0]][new_poi
     new_board = board
     return new_board
 def is_winable(board):
