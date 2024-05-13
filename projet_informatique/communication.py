@@ -12,7 +12,7 @@ IMP = 5.0
 local_ip = 'localhost'
 server_ip = '172.17.3.30'  # Adresse IP du serveur
 server_port = 3000  # Port du serveur
-
+# Les données que à envoyer au serveur pour se connecter
 request_data = {
     "request": "subscribe",
     "port": 3003,
@@ -58,19 +58,22 @@ class Server:
     def __init__(self):
         # Créer un socket TCP
         self.__server_socket = socket.socket()
+        # Établir un temps de réaction
         self.__server_socket.settimeout(0.5)
         # Établir une connexion avec le client
         self.__server_socket.bind((local_ip, 3003))
-        # Mettre move dans la class
-
+    # Fonction principale de la communication avec le serveur
     def listen(self):
         try:
             while True:
+                # Écoute sur le socket créé
                 self.__server_socket.listen()
                 try:
+                    # Accepte la connection
                     client, adrr = self.__server_socket.accept()
                     # Attendre la demande du client
                     with client:
+                        # Boucle de réception
                         chunks = []
                         finished = False
                         while not finished:
@@ -93,9 +96,10 @@ class Server:
                             response_ping = json.dumps(response_data)
                             client.sendall(response_ping.encode("utf-8"))
                             print("response sended", response_ping)
-                            
+                        # Vérifier si la demande est un "play"    
                         elif request.get("request") == "play":
-                            #self.move_comm()
+
+                            # Envois du coups à jouer
                             client.sendall(self.move_comm()) # compute a move and send it to client
                             #raise NotImplemented()
                 except socket.timeout:
@@ -104,26 +108,28 @@ class Server:
         except Exception as e:
             print("Une erreur s'est produite :", e)
             raise e
-
+    # Le coup à faire
     def move_comm(self):
+        # Définition des variable
         status = request["state"]
         #print(status)
         board = status["board"]
-        if status["players"][0]=="Pululu" :
+        if status["players"][0]=="PDF_gang" :
             My_Blockers = status["blockers"][0]
             Ennemy_Blockers = status["blockers"][1]
             My_pawn = PAWN1
             ennemy_pawn = PAWN2
-        elif status["players"][1]=="Pululu":
+        elif status["players"][1]=="PDF_gang":
             My_Blockers = status["blockers"][1]
             Ennemy_Blockers = status["blockers"][0]
             My_pawn = PAWN2
             ennemy_pawn = PAWN1
+        # Encoder le message
         move = choose_move(board, My_pawn, My_Blockers,ennemy_pawn)
         move_send = json.dumps(move).encode('utf-8')
         print(move_send)
         return move_send
-    # Le coup à faire
+
     """def send_move(self):
         totalsend = 0
         move_send = json.dumps(move).encode('utf-8')
@@ -138,12 +144,10 @@ server = Server()
 
 #Prinipal code
 response = client.send_request_to_server()
-#playing = server.move_comm()
 if response is not None:
     print("Réponse du serveur:", response)
 else:
     print("Aucune réponse reçue du serveur.")
-# Réponse au ping
 try:
     server.listen()
 except KeyboardInterrupt:
