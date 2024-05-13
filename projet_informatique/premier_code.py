@@ -62,12 +62,13 @@ class Server:
         # Établir une connexion avec le client
         self.__server_socket.bind((local_ip, 3009))
         # Mettre move dans la class
-
+    
     def listen(self):
         try:
-            self.__server_socket.listen() 
+             
             
             while True:
+                self.__server_socket.listen()
                 try:
                     client, adrr = self.__server_socket.accept()
                     # Attendre la demande du client
@@ -75,12 +76,16 @@ class Server:
                         chunks = []
                         finished = False
                         while not finished:
-                            data = client.recv(2048)
+                            data = client.recv(10000)
+                            print(data)
                             chunks.append(data)
                             finished = data
-                        data.decode("utf-8")
-                        global request
-                        request = json.loads(data)
+                            try:
+                                final_data = b''.join(chunks).decode("utf-8")
+                                global request
+                                request = json.loads(final_data)
+                            except json.JSONDecodeError as e:
+                                raise e
                         # Vérifier si la demande est un "ping"
                         
                         if request.get("request") == "ping":
@@ -92,7 +97,8 @@ class Server:
                             print("response sended", response_ping)
                             
                         elif request.get("request") == "play":
-                            self.move_comm() # compute a move and send it to client
+                            #self.move_comm()
+                            client.sendall(self.move_comm()) # compute a move and send it to client
                             #raise NotImplemented()
                 except socket.timeout:
                     pass        
@@ -100,10 +106,10 @@ class Server:
         except Exception as e:
             print("Une erreur s'est produite lors de la réponse au ping:", e)
             raise e
-
+    # Le coup à faire
     def move_comm(self):
         status = request["state"]
-        print(status)
+        #print(status)
         board = status["board"]
         if status["players"][0]=="Pululu" :
             My_Blockers = status["blockers"][0]
@@ -115,18 +121,20 @@ class Server:
             Ennemy_Blockers = status["blockers"][0]
             My_pawn = PAWN2
             ennemy_pawn = PAWN1
-        global move
         move = choose_move(board, My_pawn, My_Blockers)
+        move_send = json.dumps(move).encode('utf-8')
+        print(move_send)
+        return move_send
         # Envoie notre coup
-        raise self.send_move()
-    # Le coup à faire
-    def send_move(self):
+
+    """def send_move(self, move):
         totalsend = 0
-        move_send = json.dumps(move).encode('utF8')
+        move_send = json.dumps(move).encode('utf-8')
         print(move_send)
         while totalsend < len(move_send):
             sent = self.__server_socket.send(move_send)
             totalsend += sent
+            print("Total :", totalsend)"""
 
 client = Client(request_data)
 server = Server()
