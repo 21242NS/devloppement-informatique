@@ -63,20 +63,23 @@ def can_place_blocker(board, pos_blocker1, pos_blocker2):
         mid_box_y=int((pos_blocker1[1]-pos_blocker2[1])/2+pos_blocker2[1])
         if board[mid_box_x][mid_box_y]==EMPTY_PAWN or board[mid_box_x][mid_box_y] == PAWN1 or board[mid_box_x][mid_box_y] == PAWN2 or board[mid_box_x][mid_box_y] == BLOCKER : # check teh fact that between the box it is an intersection
             return False
-        elif mid_box_x == pos_blocker1[0] :
-            horizontal_axe_1=mid_box_y+1
-            horizontal_axe_2=mid_box_y-1
-            if board[mid_box_x][horizontal_axe_1]==BLOCKER and board[mid_box_x][horizontal_axe_2] == BLOCKER :
+        elif pos_blocker1[0] % 2 == 1:
+            j = min(pos_blocker1[1],pos_blocker2[1])+1
+            ortho_1 = [pos_blocker1[0]-1,j]
+            ortho_2 = [pos_blocker1[0]+1,j]
+            if board[ortho_1[0]][ortho_1[1]] == BLOCKER and board[ortho_2[0]][ortho_2[1]] == BLOCKER:
                 return False
-        elif mid_box_y == pos_blocker1[1] :
-            vertical_axe_1 =mid_box_x+1
-            vertical_axe_2 =mid_box_x-1
-            if board[vertical_axe_1][mid_box_y]==BLOCKER and board[vertical_axe_2][mid_box_y] == BLOCKER :
+        elif pos_blocker1[1]%2==1 :
+            i = min(pos_blocker1[0],pos_blocker2[0])+1
+            ortho_1 = [i,pos_blocker1[1]-1]
+            ortho_2 = [i,pos_blocker1[1]+1]
+            if board[ortho_1[0]][ortho_1[1]] == BLOCKER and board[ortho_2[0]][ortho_2[1]] == BLOCKER:
                 return False
         else :
             return True
     else :
         return False
+    return True
 # Function which generates all possible moves
 def generate_moves(board, pawn, My_Blockers, pawn2):
     
