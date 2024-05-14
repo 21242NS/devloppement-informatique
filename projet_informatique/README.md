@@ -8,4 +8,3 @@ Notre strategie a été de calculée le nombre de coups a faire pour arriver a l
 + coverage
 + socket
 + random
-+ numpy
