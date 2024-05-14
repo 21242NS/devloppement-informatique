@@ -3,4 +3,3 @@ random
 pytest 
 coverage
 socket
-numpy
